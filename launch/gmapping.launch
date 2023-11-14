@@ -1,9 +1,21 @@
 <launch>
-  <node name="gmapping"
+
+  <arg name="robot_name" default=""/>
+  <arg name="odom_frame" default="$(arg robot_name)/odom"/>
+  <arg name="base_frame" default="$(arg robot_name)/base_frame"/>
+  <arg name="scan_topic" default="$(arg robot_name)/scan"/>
+  
+  <node name="gmapping_$(arg robot_name)"
     pkg="gmapping"
     type="slam_gmapping"
     clear_params="true">
     <rosparam command="load"
       file="$(find leo_navigation)/config/slam_gmapping.yaml" />
+      
+    <param name="base_frame" value="$(arg base_frame)"/>
+    <param name="odom_frame" value="$(arg odom_frame)"/>
+    
+    <remap from="scan" to="$(arg scan_topic)"/>
+
   </node>
 </launch>

@@ -1,24 +1,27 @@
 <launch>
-  <arg name="three_d" default="false" />
-
-  <node if="$(arg three_d)"
-    name="imu_filter_node"
-    pkg="imu_filter_madgwick"
-    type="imu_filter_node">
-    <rosparam command="load"
-      file="$(find leo_navigation)/config/imu_filter_node.yaml" />
-  </node>
-
-  <node name="ekf_localization_node"
+  <arg name="robot_name" default=""/>
+  <arg name="odom_frame" default="$(arg robot_name)/odom"/>
+  <arg name="base_link_frame" default="$(arg robot_name)/base_footprint"/>
+  <arg name="world_frame" default="$(arg robot_name)/odom"/>
+  <arg name="imu0" default="$(arg robot_name)/imu/data_raw"/>
+  <arg name="odom0" default="$(arg robot_name)/wheel_odom_with_covariance"/>
+  <arg name="odom_filtered" default="$(arg robot_name)/odometry/filtered"/>
+ 
+  <node name="ekf_localization_node_$(arg robot_name)"
     pkg="robot_localization"
     type="ekf_localization_node"
     clear_params="true">
-    <rosparam unless="$(arg three_d)"
+    <rosparam 
       command="load"
       file="$(find leo_navigation)/config/ekf_localization_node/ekf_2d.yaml" />
-    <rosparam if="$(arg three_d)"
-      command="load"
-      file="$(find leo_navigation)/config/ekf_localization_node/ekf_3d.yaml" />
+    
+    <param name="odom_frame" value="$(arg odom_frame)"/>
+    <param name="base_link_frame" value="$(arg base_link_frame)"/>
+    <param name="world_frame" value="$(arg world_frame)"/>
+    <param name="imu0" value="$(arg imu0)"/>
+    <param name="odom0" value="$(arg odom0)"/>
+    
+    <remap from="/odometry/filtered" to="$(arg odom_filtered)"/>
   </node>
 
 </launch>

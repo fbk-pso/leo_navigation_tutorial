@@ -1,0 +1,28 @@
+<launch>
+
+  <arg name="robot_name" default=""/>
+  <arg name="x" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  
+  <!--include file="$(find leo_navigation)/launch/twist_mux.launch">
+    <arg name="robot_name" value="$(arg robot_name)"/>
+  </include-->
+  
+  <include file="$(find leo_navigation)/launch/odometry.launch">
+   <arg name="robot_name" value="$(arg robot_name)"/>
+  </include>
+  
+  <include file="$(find leo_navigation)/launch/amcl.launch">
+    <arg name="robot_name" value="$(arg robot_name)"/>
+    <arg name="x" default="$(arg x)"/>
+    <arg name="y" default="$(arg y)"/>
+  </include>
+  
+  <include file="$(find leo_navigation)/launch/move_base.launch">
+    <arg name="robot_name" value="$(arg robot_name)"/>
+  </include>
+  
+  
+  
+
+</launch>

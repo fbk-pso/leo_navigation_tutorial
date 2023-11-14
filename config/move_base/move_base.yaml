@@ -15,6 +15,6 @@ base_global_planner: global_planner/GlobalPlanner
 base_local_planner: base_local_planner/TrajectoryPlannerROS
 
 # Recovery behavior parameters
-recovery_behavior_enabled: true
+recovery_behavior_enabled: false
 clearing_rotation_allowed: true
 conservative_reset_dist: 2.0

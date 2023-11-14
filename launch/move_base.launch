@@ -1,11 +1,9 @@
 <launch>
-  <remap from="odom" to="odometry/filtered" />
-  <remap from="cmd_vel" to="nav_vel" />
 
-  <node name="move_base"
-    pkg="move_base"
-    type="move_base"
-    clear_params="true">
+  <arg name="robot_name" default=""/>
+
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base_$(arg robot_name)" output="screen">
     <rosparam command="load"
       file="$(find leo_navigation)/config/move_base/move_base.yaml" />
 
@@ -26,5 +24,59 @@
       file="$(find leo_navigation)/config/move_base/planners/local_planner.yaml" />
     <rosparam command="load"
       file="$(find leo_navigation)/config/move_base/planners/global_planner.yaml" />
+
+    <!-- reset frame_id parameters using user input data -->
+    <param name="global_costmap/robot_base_frame" value="$(arg robot_name)/base_footprint"/>
+    <param name="local_costmap/robot_base_frame" value="$(arg robot_name)/base_footprint"/>
+    <param name="TrajectoryPlannerROS/global_frame_id" value="$(arg robot_name)/odom"/>
+
+    <remap from="cmd_vel" to="$(arg robot_name)/cmd_vel"/>
+    <remap from="odom" to="$(arg robot_name)/odometry/filtered"/>
+    <remap from="scan" to="$(arg robot_name)/scan"/>
+    <remap from="map" to="/map" />
+    <remap from="/move_base_simple/goal"                                           to="$(arg robot_name)/move_base_simple/goal" />
+    <remap from="/move_base/TebLocalPlannerROS/global_plan"                        to="$(arg robot_name)/move_base/TebLocalPlannerROS/global_plan" />
+    <remap from="/move_base/TebLocalPlannerROS/local_plan"                         to="$(arg robot_name)/move_base/TebLocalPlannerROS/local_plan" />
+    <remap from="/move_base/TebLocalPlannerROS/teb_markers"                        to="$(arg robot_name)/move_base/TebLocalPlannerROS/teb_markers" />
+    <remap from="/move_base/TebLocalPlannerROS/teb_markers_array"                  to="$(arg robot_name)/move_base/TebLocalPlannerROS/teb_markers_array" />
+    <remap from="/move_base/TebLocalPlannerROS/teb_poses"                          to="$(arg robot_name)/move_base/TebLocalPlannerROS/teb_poses" />
+    <remap from="/move_base/global_costmap/costmap"                                to="$(arg robot_name)/move_base/global_costmap/costmap" />
+    <remap from="/move_base/global_costmap/costmap_updates"                        to="$(arg robot_name)/move_base/global_costmap/costmap_updates" />
+    <remap from="/move_base/local_costmap/costmap"                                 to="$(arg robot_name)/move_base/local_costmap/costmap" />
+    <remap from="/move_base/local_costmap/costmap_updates"                         to="$(arg robot_name)/move_base/local_costmap/costmap_updates" />
+    <remap from="/move_base/local_costmap/footprint"                               to="$(arg robot_name)/move_base/local_costmap/footprint" />
+
+    <remap from="/move_base/GlobalPlanner/parameter_descriptions"                  to="$(arg robot_name)/move_base/GlobalPlanner/parameter_descriptions" />
+    <remap from="/move_base/GlobalPlanner/parameter_updates"                       to="$(arg robot_name)/move_base/GlobalPlanner/parameter_updates" />
+    <remap from="/move_base/GlobalPlanner/plan"                                    to="$(arg robot_name)/move_base/GlobalPlanner/plan" />
+    <remap from="/move_base/GlobalPlanner/potential"                               to="$(arg robot_name)/move_base/GlobalPlanner/potential" />
+    <remap from="/move_base/TebLocalPlannerROS/obstacles"                          to="$(arg robot_name)/move_base/TebLocalPlannerROS/obstacles" />
+    <remap from="/move_base/TebLocalPlannerROS/parameter_descriptions"             to="$(arg robot_name)/move_base/TebLocalPlannerROS/parameter_descriptions" />
+    <remap from="/move_base/TebLocalPlannerROS/parameter_updates"                  to="$(arg robot_name)/move_base/TebLocalPlannerROS/parameter_updates" />
+    <remap from="/move_base/cancel"                                                to="$(arg robot_name)/move_base/cancel" />
+    <remap from="/move_base/current_goal"                                          to="$(arg robot_name)/move_base/current_goal" />
+    <remap from="/move_base/feedback"                                              to="$(arg robot_name)/move_base/feedback" />
+    <remap from="/move_base/global_costmap/footprint"                              to="$(arg robot_name)/move_base/global_costmap/footprint" />
+    <remap from="/move_base/global_costmap/inflation_layer/parameter_descriptions" to="$(arg robot_name)/move_base/global_costmap/inflation_layer/parameter_descriptions" />
+    <remap from="/move_base/global_costmap/inflation_layer/parameter_updates"      to="$(arg robot_name)/move_base/global_costmap/inflation_layer/parameter_updates" />
+    <remap from="/move_base/global_costmap/obstacle_layer/clearing_endpoints"      to="$(arg robot_name)/move_base/global_costmap/obstacle_layer/clearing_endpoints" />
+    <remap from="/move_base/global_costmap/obstacle_layer/parameter_descriptions"  to="$(arg robot_name)/move_base/global_costmap/obstacle_layer/parameter_descriptions" />
+    <remap from="/move_base/global_costmap/obstacle_layer/parameter_updates"       to="$(arg robot_name)/move_base/global_costmap/obstacle_layer/parameter_updates" />
+    <remap from="/move_base/global_costmap/parameter_descriptions"                 to="$(arg robot_name)/move_base/global_costmap/parameter_descriptions" />
+    <remap from="/move_base/global_costmap/parameter_updates"                      to="$(arg robot_name)/move_base/global_costmap/parameter_updates" />
+    <remap from="/move_base/global_costmap/static_layer/parameter_descriptions"    to="$(arg robot_name)/move_base/global_costmap/static_layer/parameter_descriptions" />
+    <remap from="/move_base/global_costmap/static_layer/parameter_updates"         to="$(arg robot_name)/move_base/global_costmap/static_layer/parameter_updates" />
+    <remap from="/move_base/goal"                                                  to="$(arg robot_name)/move_base/goal" />
+    <remap from="/move_base/local_costmap/obstacle_layer/parameter_descriptions"   to="$(arg robot_name)/move_base/local_costmap/obstacle_layer/parameter_descriptions" />
+    <remap from="/move_base/local_costmap/obstacle_layer/parameter_updates"        to="$(arg robot_name)/move_base/local_costmap/obstacle_layer/parameter_updates" />
+    <remap from="/move_base/local_costmap/parameter_descriptions"                  to="$(arg robot_name)/move_base/local_costmap/parameter_descriptions" />
+    <remap from="/move_base/local_costmap/parameter_updates"                       to="$(arg robot_name)/move_base/local_costmap/parameter_updates" />
+    <remap from="/move_base/local_costmap/static_layer/parameter_descriptions"     to="$(arg robot_name)/move_base/local_costmap/static_layer/parameter_descriptions" />
+    <remap from="/move_base/local_costmap/static_layer/parameter_updates"          to="$(arg robot_name)/move_base/local_costmap/static_layer/parameter_updates" />
+    <remap from="/move_base/parameter_descriptions"                                to="$(arg robot_name)/move_base/parameter_descriptions" />
+    <remap from="/move_base/parameter_updates"                                     to="$(arg robot_name)/move_base/parameter_updates" />
+    <remap from="/move_base/result"                                                to="$(arg robot_name)/move_base/result" />
+    <remap from="/move_base/status"                                                to="$(arg robot_name)/move_base/status" />
+    <remap from="/move_base_simple/goal"                                           to="$(arg robot_name)/move_base_simple/goal" />
   </node>
 </launch>

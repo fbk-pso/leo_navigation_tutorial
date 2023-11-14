@@ -1,14 +1,19 @@
 <launch>
-  <arg name="cmd_vel_out" default="cmd_vel" />
+  <arg name="robot_name" default=""/>
+  <arg name="cmd_vel_out" default="$(arg robot_name)/cmd_vel" />
 
-  <node name="twist_mux"
+  <node name="twist_mux_$(arg robot_name)"
     pkg="twist_mux"
     type="twist_mux">
     <remap from="cmd_vel_out" to="$(arg cmd_vel_out)" />
+    
+    
     <rosparam command="load"
       file="$(find leo_navigation)/config/twist_mux/topics.yaml" />
     <rosparam command="load"
       file="$(find leo_navigation)/config/twist_mux/locks.yaml" />
+      
+      
   </node>
 
 </launch>
